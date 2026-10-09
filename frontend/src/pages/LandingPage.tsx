@@ -15,7 +15,9 @@ import {
   ChevronUp,
   FileAudio,
   AlertTriangle,
-  Layers,
+  Radio,
+  Sliders,
+  Terminal,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -23,24 +25,24 @@ export const LandingPage: React.FC = () => {
 
   const faqs = [
     {
-      q: 'How does VoiceShield AI detect cloned voices without external cloud APIs?',
-      a: 'VoiceShield runs an in-house PyTorch neural network (CNN + Bi-GRU with temporal self-attention) locally on the FastAPI backend. It extracts Log-Mel spectrogram features to detect phase discontinuities, vocoder smearing, unnatural pitch stability, and metallic overtones characteristic of synthetic speech models.',
+      q: 'How does VoiceShield AI detect cloned voices without third-party AI APIs?',
+      a: 'VoiceShield runs a local PyTorch neural network (CNN + Bi-GRU with temporal self-attention) directly inside the FastAPI backend. It extracts 80-bin Log-Mel spectrogram features to uncover synthetic phase smearing, vocoder overtone glitches, unnatural pitch flatness, and spectral discontinuities characteristic of neural speech synthesis.',
     },
     {
-      q: 'Is customer audio saved or stored on disk or used for training?',
-      a: 'Strictly no. VoiceShield enforces zero audio retention by default. Ingested audio buffers reside only in transient RAM or short-lived temporary files that are immediately deleted upon inference completion or error. Only anonymous, minimal mathematical metadata is recorded.',
+      q: 'Is customer voice audio retained or stored on disk?',
+      a: 'Zero raw audio is retained by default. Audio streams reside only in client RAM and ephemeral, short-lived operating system buffers with randomized UUID paths. These transient files are unlinked in a mandatory Python finally: block immediately after inference. Only anonymous, non-biometric forensic metadata is stored.',
     },
     {
-      q: 'Does a high synthetic score automatically block a caller’s bank account?',
-      a: 'No. The multi-factor banking risk engine treats voice scores as probabilistic signals, never definitive identity proof. When risk is elevated, the system mandates an independent out-of-band verification (such as an SMS passcode or mobile push token) to protect both the customer and the institution without false-positive harm.',
+      q: 'Does an elevated synthetic score automatically freeze a customer’s account?',
+      a: 'No. The multi-factor banking risk engine treats acoustic scores as probabilistic risk signals, never proof of identity or fraud. When risk is elevated, the engine mandates secondary out-of-band verification (e.g. registered mobile push token, SMS challenge, or callback) to safeguard transactions without punitive false-positive harm.',
     },
     {
       q: 'Can VoiceShield AI connect to live banking networks or real credit cards?',
-      a: 'No. VoiceShield is explicitly designed as a security evaluation platform and simulation sandbox. It never requests or connects to real bank credentials, card numbers, or live payment rails.',
+      a: 'No. VoiceShield is explicitly engineered as a security evaluation sandbox and fraud defense platform. It never asks for, connects to, or stores real financial credentials, credit card numbers, or live payment rails.',
     },
     {
-      q: 'How are degraded audio signals (such as airport background noise) handled?',
-      a: 'Before running deep inference, the audio processor conducts signal quality checks for digital clipping, silence, and low SNR. If the audio is degraded or the model uncertainty is elevated, the engine triggers an INCONCLUSIVE_VERIFY action rather than making an overconfident guess.',
+      q: 'How does the system respond to degraded audio, such as cellular background noise?',
+      a: 'Prior to deep inference, the audio processor runs automated signal integrity checks for digital clipping, silence, and low Signal-to-Noise Ratio (SNR). If the signal is compromised or the model is uncertain, the system triggers an INCONCLUSIVE_VERIFY policy rather than an overconfident guess.',
     },
   ];
 
@@ -49,112 +51,200 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section style={{
         position: 'relative',
-        padding: '5rem 1.5rem 4rem',
-        background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent 70%)',
-        textAlign: 'center',
+        padding: '6rem 1.5rem 4.5rem',
+        overflow: 'hidden',
       }}>
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+        {/* Subtle Ambient Radial Glows */}
+        <div style={{
+          position: 'absolute',
+          top: '-15%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '800px',
+          height: '500px',
+          background: 'radial-gradient(ellipse, rgba(99, 102, 241, 0.16) 0%, rgba(6, 182, 212, 0.06) 45%, transparent 70%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }} />
+
+        <div style={{ maxWidth: '1080px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+          {/* Top Pill Tag */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.35rem 0.85rem',
+            gap: '0.6rem',
+            padding: '0.35rem 1rem',
             borderRadius: '9999px',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
-            color: '#60a5fa',
-            fontSize: '0.8rem',
+            background: 'rgba(255, 255, 255, 0.04)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(12px)',
+            color: '#c7d2fe',
+            fontSize: '0.78rem',
             fontWeight: 600,
-            marginBottom: '1.75rem',
+            marginBottom: '2rem',
+            letterSpacing: '0.02em',
           }}>
-            <Shield size={14} />
-            <span>Next-Generation Voice Anti-Spoofing & Risk Mitigation</span>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+            <span>Zero-Retention Acoustic Anti-Spoofing & Risk Engine</span>
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(2.5rem, 5.5vw, 4.25rem)',
+            fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
             fontWeight: 800,
-            lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            marginBottom: '1.5rem',
+            lineHeight: 1.12,
+            letterSpacing: '-0.035em',
+            marginBottom: '1.6rem',
             color: '#ffffff',
           }}>
             Stop Voice Cloning Fraud <br />
             <span style={{
-              background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+              background: 'linear-gradient(135deg, #818cf8 0%, #38bdf8 50%, #c084fc 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
-              Before It Happens.
+              Before Payments Clear.
             </span>
           </h1>
 
           <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+            fontSize: 'clamp(1.05rem, 1.8vw, 1.25rem)',
             color: 'var(--text-secondary)',
-            lineHeight: 1.6,
-            maxWidth: '720px',
-            margin: '0 auto 2.5rem',
+            lineHeight: 1.65,
+            maxWidth: '740px',
+            margin: '0 auto 2.8rem',
+            fontWeight: 400,
           }}>
-            Protect simulated banking workflows, wire transfers, and identity authorization from generative deepfake voices using localized PyTorch acoustic neural networks and privacy-first multi-factor safeguards.
+            Defend simulated banking workflows, wire authorizations, and phone verification against generative AI voice clones using localized PyTorch deep neural networks and contextual multi-factor risk policies.
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <Link to="/dashboard" className="btn btn-primary btn-lg">
-              <span>Get Started</span>
+              <span>Launch Security Console</span>
               <ArrowRight size={18} />
             </Link>
             <Link to="/banking-simulator" className="btn btn-secondary btn-lg">
               <Landmark size={18} />
-              <span>Explore Demo Simulator</span>
+              <span>Simulate Threat Scenarios</span>
             </Link>
           </div>
         </div>
 
-        {/* Dashboard Preview Glass Card */}
-        <div style={{ maxWidth: '1100px', margin: '4rem auto 0', padding: '0 1rem' }}>
-          <div className="glass-panel" style={{
+        {/* Live Interactive Sandbox Preview Card */}
+        <div style={{ maxWidth: '1120px', margin: '4.5rem auto 0', padding: '0 0.5rem', position: 'relative', zIndex: 1 }}>
+          <div className="card" style={{
             padding: '2rem',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15)',
-            textAlign: 'left',
+            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.12)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Header bar */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid var(--border-subtle)',
+              paddingBottom: '1.25rem',
+              marginBottom: '1.5rem',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                 <div style={{ display: 'flex', gap: '6px' }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#f59e0b' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#10b981' }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#f43f5e', opacity: 0.8 }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#f59e0b', opacity: 0.8 }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#10b981', opacity: 0.8 }} />
                 </div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                  VoiceShield AI Security Console — Live Wire Authorization Sandbox
-                </span>
+                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Terminal size={14} color="#818cf8" />
+                  <span>VOICESHIELD-GATEWAY // WIRE-TX-84920</span>
+                </div>
               </div>
-              <span className="badge badge-success">Local PyTorch Engine Active</span>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span className="badge badge-success">Local PyTorch Engine Active</span>
+                <span className="badge badge-neutral">Zero Audio Stored</span>
+              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Simulated Audio Ingestion</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f8fafc', marginTop: '0.25rem' }}>16 kHz PCM Mono</div>
-                <div style={{ fontSize: '0.75rem', color: '#34d399', marginTop: '0.25rem' }}>✓ Optimal SNR & Peak Checked</div>
+            {/* Split Inspection Details */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1.25rem' }}>
+              {/* Box 1: Signal */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '12px',
+                padding: '1.25rem',
+              }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.04em' }}>
+                  Signal Ingestion & Quality
+                </div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', marginTop: '0.35rem' }}>
+                  16 kHz PCM Mono
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '18px' }}>
+                    <span className="wave-bar" style={{ animationDelay: '0.1s' }} />
+                    <span className="wave-bar" style={{ animationDelay: '0.3s' }} />
+                    <span className="wave-bar" style={{ animationDelay: '0.2s' }} />
+                    <span className="wave-bar" style={{ animationDelay: '0.5s' }} />
+                    <span className="wave-bar" style={{ animationDelay: '0.4s' }} />
+                  </div>
+                  <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 600 }}>SNR: 24.2 dB (Clean)</span>
+                </div>
               </div>
 
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>PyTorch CNN-BiGRU Score</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f87171', marginTop: '0.25rem' }}>0.94 (Synthetic)</div>
-                <div style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.25rem' }}>Phase jitter & vocoder artifacts</div>
+              {/* Box 2: Deep Learning */}
+              <div style={{
+                background: 'rgba(244, 63, 94, 0.03)',
+                border: '1px solid rgba(244, 63, 94, 0.2)',
+                borderRadius: '12px',
+                padding: '1.25rem',
+              }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.04em' }}>
+                  PyTorch CNN-BiGRU Output
+                </div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#f43f5e', marginTop: '0.25rem' }}>
+                  0.941 <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>(Synthetic)</span>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#fb7185', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                  Harmonic vocoder phase jitter detected
+                </div>
               </div>
 
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Simulated Financial Risk</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fbbf24', marginTop: '0.25rem' }}>$45,000 Wire Transfer</div>
-                <div style={{ fontSize: '0.75rem', color: '#fbbf24', marginTop: '0.25rem' }}>New unverified international payee</div>
+              {/* Box 3: Banking Context */}
+              <div style={{
+                background: 'rgba(245, 158, 11, 0.03)',
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                borderRadius: '12px',
+                padding: '1.25rem',
+              }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.04em' }}>
+                  Transaction Context
+                </div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fbbf24', marginTop: '0.25rem' }}>
+                  $45,000.00
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                  New unverified overseas counterparty
+                </div>
               </div>
 
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Risk Engine Action</div>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f87171', marginTop: '0.25rem' }}>PAUSE_AND_VERIFY</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Out-of-band callback required</div>
+              {/* Box 4: Multi-Factor Policy */}
+              <div style={{
+                background: 'rgba(79, 70, 229, 0.04)',
+                border: '1px solid rgba(99, 102, 241, 0.25)',
+                borderRadius: '12px',
+                padding: '1.25rem',
+              }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.04em' }}>
+                  Enforced Policy Action
+                </div>
+                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#a5b4fc', marginTop: '0.35rem' }}>
+                  PAUSE_AND_VERIFY
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                  Out-of-band callback & fraud desk review
+                </div>
               </div>
             </div>
           </div>
@@ -162,129 +252,218 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Feature Pillars */}
-      <section style={{ padding: '5rem 1.5rem', backgroundColor: 'var(--bg-secondary)' }}>
+      <section style={{ padding: '5.5rem 1.5rem', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-secondary)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#ffffff' }}>
-              Engineered for Enterprise Fraud Prevention
+          <div style={{ textAlign: 'center', marginBottom: '3.8rem' }}>
+            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.025em', color: '#ffffff' }}>
+              Engineered for Serious Financial Fraud Defense
             </h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.75rem', maxWidth: '640px', margin: '0.75rem auto 0' }}>
-              Built specifically to mitigate voice cloning attacks against wire transfers, customer service hotlines, and simulated payments.
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.65rem', maxWidth: '640px', margin: '0.65rem auto 0', fontSize: '0.98rem' }}>
+              High-throughput acoustic defense designed to stop social engineering, executive voice impersonation, and fraudulent payment dispatches.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             <div className="card">
-              <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(59, 130, 246, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa', marginBottom: '1.25rem' }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 12,
+                background: 'rgba(79, 70, 229, 0.1)',
+                border: '1px solid rgba(79, 70, 229, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#818cf8',
+                marginBottom: '1.35rem',
+              }}>
                 <Cpu size={24} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.55rem', color: '#ffffff' }}>
                 Localized PyTorch Deep Learning
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Inference executes 100% locally on the FastAPI backend using a hybrid 3-stage CNN + Bi-GRU with self-attention. Never relies on third-party AI APIs or external clouds.
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65 }}>
+                Inference runs entirely in your FastAPI backend using a hybrid 3-stage 2D CNN + 2-layer Bi-GRU with self-attention. Never sends sensitive financial calls to external third-party cloud APIs.
               </p>
             </div>
 
             <div className="card">
-              <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#34d399', marginBottom: '1.25rem' }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 12,
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#34d399',
+                marginBottom: '1.35rem',
+              }}>
                 <Lock size={24} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.55rem', color: '#ffffff' }}>
                 Zero-Retention Audio Privacy
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Customer voice is never stored on disk or used for training. Transient memory buffers are purged immediately upon inference completion, recording only minimal metadata logs.
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65 }}>
+                Caller audio is strictly ephemeral. Files are created under non-deterministic UUIDs and purged in Python <code>finally:</code> blocks immediately post-analysis. Only minimal mathematical metadata is logged.
               </p>
             </div>
 
             <div className="card">
-              <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fbbf24', marginBottom: '1.25rem' }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 12,
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fbbf24',
+                marginBottom: '1.35rem',
+              }}>
                 <ShieldCheck size={24} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.55rem', color: '#ffffff' }}>
                 Contextual Banking Risk Engine
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Voice synthesis scores are cross-referenced with transaction amounts, recipient reputation, and signal quality to determine fair, defensible actions without arbitrary lockouts.
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65 }}>
+                Acoustic model scores are cross-referenced with monetary amount, payee reputation, and audio quality. Enforces out-of-band verification without locking out legitimate customers.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section style={{ padding: '5rem 1.5rem' }}>
+      {/* Decision Workflow */}
+      <section style={{ padding: '5.5rem 1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#ffffff' }}>
-              End-to-End Decision Architecture
+          <div style={{ textAlign: 'center', marginBottom: '3.8rem' }}>
+            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.025em', color: '#ffffff' }}>
+              Four-Stage Mitigation Architecture
             </h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-              How VoiceShield AI turns raw acoustic signals into defensible mitigation steps
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem', fontSize: '0.95rem' }}>
+              Transforming transient acoustic signals into defensible banking safeguards
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-            <div className="card" style={{ textAlign: 'center', padding: '2rem 1.5rem' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#3b82f6', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                1
+            <div className="card" style={{ padding: '2rem 1.5rem' }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                background: 'rgba(79, 70, 229, 0.15)',
+                border: '1px solid rgba(99, 102, 241, 0.3)',
+                color: '#a5b4fc',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.25rem',
+              }}>
+                01
               </div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Audio Preprocessing</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Downmixes to mono, resamples to 16 kHz, and conducts clipping and SNR quality verification.
+              <h4 style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem', fontSize: '1.05rem' }}>Acoustic Normalization</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Ingests audio, downmixes to mono, standardizes to 16 kHz, and checks for digital clipping and low SNR.
               </p>
             </div>
 
-            <div className="card" style={{ textAlign: 'center', padding: '2rem 1.5rem' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#6366f1', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                2
+            <div className="card" style={{ padding: '2rem 1.5rem' }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                background: 'rgba(6, 182, 212, 0.15)',
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                color: '#67e8f9',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.25rem',
+              }}>
+                02
               </div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Log-Mel Feature Maps</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Computes 80-bin Mel spectrograms capturing temporal texture and neural vocoder glitches.
+              <h4 style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem', fontSize: '1.05rem' }}>Log-Mel Extraction</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Computes 80-bin Mel spectrograms capturing temporal texture, harmonic phase smearing, and vocoder artifacts.
               </p>
             </div>
 
-            <div className="card" style={{ textAlign: 'center', padding: '2rem 1.5rem' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#8b5cf6', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                3
+            <div className="card" style={{ padding: '2rem 1.5rem' }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                background: 'rgba(139, 92, 246, 0.15)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                color: '#c4b5fd',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.25rem',
+              }}>
+                03
               </div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Deep Anti-Spoofing</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                CNN-BiGRU evaluates sequential prosodic consistency and produces a calibrated synthetic probability.
+              <h4 style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem', fontSize: '1.05rem' }}>CNN-BiGRU Classification</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Convolutional filters and bidirectional recurrence evaluate micro-prosody and yield calibrated synthetic probability.
               </p>
             </div>
 
-            <div className="card" style={{ textAlign: 'center', padding: '2rem 1.5rem' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#10b981', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-                4
+            <div className="card" style={{ padding: '2rem 1.5rem' }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                color: '#6ee7b7',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.25rem',
+              }}>
+                04
               </div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Mitigation Policy</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Triggers Continue, Step-Up SMS, or Pause & Verify with full human-readable audit justification.
+              <h4 style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem', fontSize: '1.05rem' }}>Policy Action Mapping</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Maps contextual variables to Continue, Step-Up SMS, or Pause & Verify with defensible audit codes.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Responsible Use & Limitations */}
-      <section style={{ padding: '4rem 1.5rem', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
+      {/* Responsible Use Disclosure */}
+      <section style={{ padding: '4rem 1.5rem', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-            <div style={{ color: '#fbbf24', flexShrink: 0, marginTop: '0.25rem' }}>
-              <AlertTriangle size={28} />
+          <div style={{
+            background: 'rgba(245, 158, 11, 0.04)',
+            border: '1px solid rgba(245, 158, 11, 0.2)',
+            borderRadius: '14px',
+            padding: '1.75rem',
+            display: 'flex',
+            gap: '1.25rem',
+            alignItems: 'flex-start',
+          }}>
+            <div style={{ color: '#fbbf24', flexShrink: 0, marginTop: '0.2rem' }}>
+              <AlertTriangle size={24} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
-                Responsible Use & Acoustic Limitations Disclosure
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.45rem' }}>
+                Ethical Use & Model Limitations Statement
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>
-                Voice synthesis detection is a probabilistic risk signal and never serves as definitive proof of identity or fraud. Acoustic models may exhibit domain shift when evaluated on unseen lossy telecommunication codecs (such as low-bitrate GSM or cellular AMR). Legitimate customers should never be summarily rejected solely because a voice model score is elevated; systems must always provide independent, out-of-band verification paths.
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.65, marginBottom: '0.5rem' }}>
+                Acoustic deepfake detection provides a probabilistic indicator, never definitive proof of caller identity. Models may experience domain shift when processing unseen low-bitrate telecommunication codecs (such as cellular AMR or GSM). Legitimate users must never be subjected to irreversible account penalties solely based on acoustic inference; systems must always provide independent, out-of-band verification recourse.
               </p>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                VoiceShield AI does not claim independent clinical or financial regulatory certification.
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                VoiceShield AI is designed for educational evaluation and simulated fraud prevention.
               </div>
             </div>
           </div>
@@ -292,22 +471,32 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: '5rem 1.5rem' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, textAlign: 'center', marginBottom: '2.5rem', color: '#ffffff' }}>
+      <section style={{ padding: '5.5rem 1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
+        <div style={{ maxWidth: '820px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, textAlign: 'center', marginBottom: '2.8rem', color: '#ffffff', letterSpacing: '-0.02em' }}>
             Frequently Asked Questions
           </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className="card" style={{ cursor: 'pointer' }} onClick={() => setOpenFaq(isOpen ? null : idx)}>
+                <div
+                  key={idx}
+                  className="card"
+                  style={{
+                    cursor: 'pointer',
+                    borderColor: isOpen ? 'rgba(99, 102, 241, 0.35)' : 'var(--border-subtle)',
+                    backgroundColor: isOpen ? 'rgba(18, 24, 38, 0.95)' : 'var(--bg-card)',
+                    padding: '1.35rem 1.5rem',
+                  }}
+                  onClick={() => setOpenFaq(isOpen ? null : idx)}
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 600, fontSize: '1rem', color: '#ffffff' }}>{faq.q}</span>
-                    {isOpen ? <ChevronUp size={18} color="var(--text-muted)" /> : <ChevronDown size={18} color="var(--text-muted)" />}
+                    <span style={{ fontWeight: 600, fontSize: '0.98rem', color: '#ffffff' }}>{faq.q}</span>
+                    {isOpen ? <ChevronUp size={18} color="#818cf8" /> : <ChevronDown size={18} color="var(--text-muted)" />}
                   </div>
                   {isOpen && (
-                    <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                    <p style={{ marginTop: '0.85rem', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65 }}>
                       {faq.a}
                     </p>
                   )}

@@ -10,6 +10,8 @@ import {
   FileAudio,
   X,
   AlertCircle,
+  Database,
+  ExternalLink,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AuditRecord } from '../services/types';
@@ -73,14 +75,32 @@ export const InvestigationHistoryPage: React.FC = () => {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: '1440px', margin: '0 auto' }}>
+    <div style={{ padding: '2.25rem 2rem', maxWidth: '1440px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.2rem 0.65rem',
+            borderRadius: '999px',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            border: '1px solid rgba(99, 102, 241, 0.25)',
+            color: '#a5b4fc',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            marginBottom: '0.5rem',
+          }}>
+            <Database size={12} color="#818cf8" />
+            Audit Ledger
+          </div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.025em' }}>
             Forensic Investigation History
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            Minimal non-biometric audit logs. Raw audio recordings and transcripts are never stored.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginTop: '0.35rem' }}>
+            Non-biometric operational logs preserving cryptographic proof of evaluation. Raw audio recordings are never stored.
           </p>
         </div>
 
@@ -95,20 +115,20 @@ export const InvestigationHistoryPage: React.FC = () => {
             <span>Export CSV</span>
           </a>
 
-          <button onClick={handleClearHistory} className="btn btn-secondary btn-sm" style={{ color: '#f87171' }}>
+          <button onClick={handleClearHistory} className="btn btn-secondary btn-sm" style={{ color: '#fb7185' }}>
             <Trash2 size={14} />
-            <span>Clear History</span>
+            <span>Clear Ledger</span>
           </button>
         </div>
       </div>
 
       {error && (
         <div style={{
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-          padding: '1rem',
-          borderRadius: '10px',
-          color: '#f87171',
+          backgroundColor: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.25)',
+          padding: '1rem 1.25rem',
+          borderRadius: '12px',
+          color: '#fb7185',
           marginBottom: '1.5rem',
         }}>
           {error}
@@ -116,17 +136,17 @@ export const InvestigationHistoryPage: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <Card style={{ marginBottom: '1.5rem', padding: '1rem' }}>
+      <Card style={{ marginBottom: '1.5rem', padding: '1.15rem' }}>
         <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flex: '1', minWidth: '220px' }}>
-            <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+          <div style={{ position: 'relative', flex: '1', minWidth: '240px' }}>
+            <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
             <input
               type="text"
               placeholder="Search Event ID or reason code..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="form-input"
-              style={{ paddingLeft: '2rem' }}
+              style={{ paddingLeft: '2.4rem' }}
             />
           </div>
 
@@ -134,7 +154,7 @@ export const InvestigationHistoryPage: React.FC = () => {
             value={riskFilter}
             onChange={(e) => { setRiskFilter(e.target.value); setPage(0); }}
             className="form-select"
-            style={{ width: 'auto', minWidth: '180px' }}
+            style={{ width: 'auto', minWidth: '190px' }}
           >
             <option value="">All Risk Actions</option>
             <option value="CONTINUE_SIMULATED_FLOW">Cleared (Low Risk)</option>
@@ -147,7 +167,7 @@ export const InvestigationHistoryPage: React.FC = () => {
             value={resultFilter}
             onChange={(e) => { setResultFilter(e.target.value); setPage(0); }}
             className="form-select"
-            style={{ width: 'auto', minWidth: '180px' }}
+            style={{ width: 'auto', minWidth: '190px' }}
           >
             <option value="">All Classification Labels</option>
             <option value="GENUINE">GENUINE</option>
@@ -157,7 +177,7 @@ export const InvestigationHistoryPage: React.FC = () => {
           </select>
 
           <button type="submit" className="btn btn-primary btn-sm">
-            Search
+            Search Ledger
           </button>
         </form>
       </Card>
@@ -169,54 +189,83 @@ export const InvestigationHistoryPage: React.FC = () => {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Event ID</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Timestamp</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Mode</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Classification</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Score</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Quality</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Risk Action</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Latency</th>
-                    <th style={{ padding: '0.75rem 0.5rem', textAlign: 'center' }}>Details</th>
+                  <tr style={{
+                    borderBottom: '1px solid var(--border-subtle)',
+                    textAlign: 'left',
+                    color: 'var(--text-muted)',
+                    fontSize: '0.74rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Event ID</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Timestamp</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Mode</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Classification</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Score</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Channel SNR</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Risk Action</th>
+                    <th style={{ padding: '0.85rem 0.65rem' }}>Latency</th>
+                    <th style={{ padding: '0.85rem 0.65rem', textAlign: 'center' }}>Inspect</th>
                   </tr>
                 </thead>
                 <tbody>
                   {records.map((r) => (
-                    <tr key={r.id} style={{ borderBottom: '1px solid rgba(30, 43, 72, 0.4)' }}>
-                      <td style={{ padding: '0.75rem 0.5rem', fontWeight: 600, color: '#60a5fa' }}>
+                    <tr
+                      key={r.id}
+                      style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                        transition: 'background-color 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                    >
+                      <td style={{
+                        padding: '0.85rem 0.65rem',
+                        fontWeight: 600,
+                        fontFamily: 'JetBrains Mono, monospace',
+                        color: 'var(--color-primary-light)',
+                      }}>
                         {r.event_id}
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', color: 'var(--text-secondary)' }}>
-                        {new Date(r.timestamp).toLocaleString()}
+                      <td style={{ padding: '0.85rem 0.65rem', color: 'var(--text-secondary)' }}>
+                        {new Date(r.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'medium' })}
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem' }}>
-                        <span className="badge badge-neutral">{r.analysis_mode}</span>
+                      <td style={{ padding: '0.85rem 0.65rem' }}>
+                        <span className="badge badge-neutral" style={{ fontSize: '0.7rem' }}>
+                          {r.analysis_mode}
+                        </span>
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', fontWeight: 600 }}>
+                      <td style={{ padding: '0.85rem 0.65rem', fontWeight: 600 }}>
                         <span style={{
-                          color: r.result_label === 'GENUINE' ? '#34d399' : r.result_label === 'SYNTHETIC_SUSPECTED' ? '#f87171' : '#fbbf24'
+                          color: r.result_label === 'GENUINE' ? '#34d399' : r.result_label === 'SYNTHETIC_SUSPECTED' ? '#fb7185' : '#fbbf24',
+                          fontSize: '0.8rem',
+                          fontFamily: 'JetBrains Mono, monospace',
                         }}>
                           {r.result_label}
                         </span>
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: (r.synthetic_score ?? 0) > 0.7 ? '#f87171' : '#34d399' }}>
+                      <td style={{
+                        padding: '0.85rem 0.65rem',
+                        fontWeight: 700,
+                        fontFamily: 'JetBrains Mono, monospace',
+                        color: (r.synthetic_score ?? 0) > 0.7 ? '#fb7185' : (r.synthetic_score ?? 0) > 0.35 ? '#fbbf24' : '#34d399',
+                      }}>
                         {r.synthetic_score !== null ? `${(r.synthetic_score * 100).toFixed(1)}%` : 'N/A'}
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', color: 'var(--text-secondary)' }}>
+                      <td style={{ padding: '0.85rem 0.65rem', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
                         {r.audio_quality}
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem' }}>
+                      <td style={{ padding: '0.85rem 0.65rem' }}>
                         <RiskBadge action={r.risk_action} />
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', color: 'var(--text-muted)' }}>
+                      <td style={{ padding: '0.85rem 0.65rem', color: 'var(--text-muted)', fontFamily: 'JetBrains Mono, monospace' }}>
                         {r.processing_latency_ms.toFixed(1)} ms
                       </td>
-                      <td style={{ padding: '0.75rem 0.5rem', textAlign: 'center' }}>
+                      <td style={{ padding: '0.85rem 0.65rem', textAlign: 'center' }}>
                         <button
                           onClick={() => setSelectedRecord(r)}
                           className="btn btn-secondary btn-sm"
-                          style={{ padding: '0.25rem 0.5rem' }}
+                          style={{ padding: '0.35rem 0.6rem' }}
                         >
                           <Eye size={14} />
                         </button>
@@ -230,7 +279,7 @@ export const InvestigationHistoryPage: React.FC = () => {
             {/* Pagination */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
               <div>
-                Showing {records.length} of {totalCount} total audit records
+                Showing <strong style={{ color: '#ffffff' }}>{records.length}</strong> of {totalCount} total audit records
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
@@ -251,9 +300,10 @@ export const InvestigationHistoryPage: React.FC = () => {
             </div>
           </>
         ) : (
-          <div style={{ textAlign: 'center', padding: '3.5rem 1rem', color: 'var(--text-muted)' }}>
-            <FileAudio size={40} style={{ margin: '0 auto 0.75rem', opacity: 0.3 }} />
-            <div>No matching investigation records found in SQLite audit table.</div>
+          <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'var(--text-muted)' }}>
+            <FileAudio size={44} style={{ margin: '0 auto 0.75rem', opacity: 0.3 }} />
+            <div style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>No matching audit records in SQLite ledger.</div>
+            <div style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>Adjust search criteria or run a simulation.</div>
           </div>
         )}
       </Card>
@@ -266,19 +316,31 @@ export const InvestigationHistoryPage: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(4px)',
+          backgroundColor: 'rgba(6, 8, 13, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 100,
           padding: '1.5rem',
         }}>
-          <div className="card" style={{ maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>
+          <div className="card" style={{ maxWidth: '620px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1.25rem',
+              borderBottom: '1px solid var(--border-subtle)',
+              paddingBottom: '0.85rem',
+            }}>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Event Forensic Inspection</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>{selectedRecord.event_id}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Forensic Event Details
+                </div>
+                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#ffffff', fontFamily: 'JetBrains Mono, monospace' }}>
+                  {selectedRecord.event_id}
+                </div>
               </div>
               <button
                 onClick={() => setSelectedRecord(null)}
@@ -288,55 +350,57 @@ export const InvestigationHistoryPage: React.FC = () => {
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Timestamp (UTC):</span>
-                <span style={{ fontWeight: 600 }}>{selectedRecord.timestamp}</span>
+                <span style={{ fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>{selectedRecord.timestamp}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Classification Label:</span>
-                <span style={{ fontWeight: 700, color: selectedRecord.result_label === 'GENUINE' ? '#34d399' : '#f87171' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Classification:</span>
+                <span style={{ fontWeight: 700, color: selectedRecord.result_label === 'GENUINE' ? '#34d399' : '#fb7185', fontFamily: 'JetBrains Mono, monospace' }}>
                   {selectedRecord.result_label}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Synthetic Voice Probability:</span>
-                <span style={{ fontWeight: 700 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Synthetic Voice Score:</span>
+                <span style={{ fontWeight: 700, fontFamily: 'JetBrains Mono, monospace', color: (selectedRecord.synthetic_score ?? 0) > 0.7 ? '#fb7185' : '#34d399' }}>
                   {selectedRecord.synthetic_score !== null ? `${(selectedRecord.synthetic_score * 100).toFixed(2)}%` : 'N/A'}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Audio Signal Integrity:</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Audio Channel Status:</span>
                 <span style={{ fontWeight: 600 }}>{selectedRecord.audio_quality}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Processing Latency:</span>
-                <span style={{ fontWeight: 600 }}>{selectedRecord.processing_latency_ms} ms</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Pipeline Latency:</span>
+                <span style={{ fontWeight: 600, fontFamily: 'JetBrains Mono, monospace' }}>{selectedRecord.processing_latency_ms} ms</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Risk Policy Action:</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', borderRadius: '8px', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Policy Risk Action:</span>
                 <RiskBadge action={selectedRecord.risk_action} />
               </div>
 
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.35rem' }}>Reason Codes:</div>
-                <div style={{ background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '6px' }}>
+                <div style={{ fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                  Reason Codes:
+                </div>
+                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '0.85rem', borderRadius: '8px' }}>
                   {selectedRecord.reason_codes.length > 0 ? (
                     selectedRecord.reason_codes.map((code, idx) => (
-                      <div key={idx} style={{ color: '#60a5fa', fontWeight: 600, marginBottom: '0.2rem' }}>
+                      <div key={idx} style={{ color: 'var(--color-primary-light)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, marginBottom: '0.3rem', fontSize: '0.825rem' }}>
                         • {code}
                       </div>
                     ))
                   ) : (
-                    <span style={{ color: 'var(--text-muted)' }}>None recorded</span>
+                    <span style={{ color: 'var(--text-muted)' }}>No explicit rules triggered</span>
                   )}
                 </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
+            <div style={{ marginTop: '1.75rem', textAlign: 'right' }}>
               <button onClick={() => setSelectedRecord(null)} className="btn btn-secondary btn-sm">
-                Close
+                Dismiss
               </button>
             </div>
           </div>

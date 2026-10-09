@@ -9,6 +9,7 @@ import {
   RefreshCw,
   AlertCircle,
   FileSpreadsheet,
+  PieChart,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -57,14 +58,32 @@ export const AnalyticsPage: React.FC = () => {
     : [];
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: '1440px', margin: '0 auto' }}>
+    <div style={{ padding: '2.25rem 2rem', maxWidth: '1440px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.2rem 0.65rem',
+            borderRadius: '999px',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            border: '1px solid rgba(99, 102, 241, 0.25)',
+            color: '#a5b4fc',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            marginBottom: '0.5rem',
+          }}>
+            <BarChart3 size={12} color="#818cf8" />
+            Audit Forensics Aggregation
+          </div>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.025em' }}>
             Analytics & Investigation Reports
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            Authentic operational metrics aggregated strictly from SQLite metadata logs.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', marginTop: '0.35rem' }}>
+            Empirical security metrics aggregated strictly from SQLite metadata logs. Zero raw speech transcripts are stored.
           </p>
         </div>
 
@@ -76,11 +95,11 @@ export const AnalyticsPage: React.FC = () => {
 
       {error && (
         <div style={{
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
+          backgroundColor: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.25)',
           padding: '1rem',
-          borderRadius: '10px',
-          color: '#f87171',
+          borderRadius: '12px',
+          color: '#fb7185',
           marginBottom: '2rem',
         }}>
           {error}
@@ -94,7 +113,7 @@ export const AnalyticsPage: React.FC = () => {
           value={data?.total_analyses ?? 0}
           subtitle="Processed recordings"
           icon={<Activity size={20} />}
-          color="#3b82f6"
+          color="#6366f1"
         />
         <StatCard
           title="Bonafide Cleared"
@@ -108,7 +127,7 @@ export const AnalyticsPage: React.FC = () => {
           value={data?.synthetic_count ?? 0}
           subtitle="Deepfake vocoder detected"
           icon={<ShieldAlert size={20} />}
-          color="#ef4444"
+          color="#f43f5e"
         />
         <StatCard
           title="Inconclusive Audio"
@@ -123,7 +142,7 @@ export const AnalyticsPage: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         {/* Risk Actions Bar Chart */}
         <Card>
-          <div style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>
+          <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>
             Policy Decision Frequencies
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
@@ -134,13 +153,26 @@ export const AnalyticsPage: React.FC = () => {
             <div style={{ width: '100%', height: 280 }}>
               <ResponsiveContainer>
                 <BarChart data={riskBarData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e2b48" />
+                  <defs>
+                    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#6366f1" stopOpacity={0.9} />
+                      <stop offset="100%" stopColor="#4f46e5" stopOpacity={0.4} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
                   <XAxis dataKey="action" stroke="#64748b" fontSize={11} interval={0} angle={-15} textAnchor="end" height={50} />
                   <YAxis stroke="#64748b" fontSize={11} allowDecimals={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0d1424', borderColor: '#243356', borderRadius: '8px', color: '#fff' }}
+                    contentStyle={{
+                      backgroundColor: 'rgba(13, 17, 26, 0.95)',
+                      borderColor: 'rgba(255, 255, 255, 0.12)',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                      backdropFilter: 'blur(16px)',
+                    }}
                   />
-                  <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="url(#barGradient)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -153,25 +185,42 @@ export const AnalyticsPage: React.FC = () => {
 
         {/* Temporal Activity Trend Area Chart */}
         <Card>
-          <div style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>
-            Analysis Volume Trend
+          <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>
+            Temporal Volume Trend
           </div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-            Daily breakdown of acoustic classifications
+            Historical timeline of acoustic classifications
           </div>
 
           {data?.recent_activity && data.recent_activity.length > 0 ? (
             <div style={{ width: '100%', height: 280 }}>
               <ResponsiveContainer>
                 <AreaChart data={data.recent_activity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e2b48" />
+                  <defs>
+                    <linearGradient id="areaTotal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#6366f1" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#6366f1" stopOpacity={0.0} />
+                    </linearGradient>
+                    <linearGradient id="areaSynthetic" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#f43f5e" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
                   <XAxis dataKey="day" stroke="#64748b" fontSize={11} />
                   <YAxis stroke="#64748b" fontSize={11} allowDecimals={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0d1424', borderColor: '#243356', borderRadius: '8px', color: '#fff' }}
+                    contentStyle={{
+                      backgroundColor: 'rgba(13, 17, 26, 0.95)',
+                      borderColor: 'rgba(255, 255, 255, 0.12)',
+                      borderRadius: '12px',
+                      color: '#fff',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                      backdropFilter: 'blur(16px)',
+                    }}
                   />
-                  <Area type="monotone" dataKey="count" stroke="#6366f1" fill="rgba(99, 102, 241, 0.2)" name="Total Evaluations" />
-                  <Area type="monotone" dataKey="synthetic" stroke="#ef4444" fill="rgba(239, 68, 68, 0.15)" name="Synthetic Flagged" />
+                  <Area type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} fill="url(#areaTotal)" name="Total Evaluations" />
+                  <Area type="monotone" dataKey="synthetic" stroke="#f43f5e" strokeWidth={2} fill="url(#areaSynthetic)" name="Synthetic Flagged" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
