@@ -41,7 +41,8 @@ yarn-error.log*
 # Data, Checkpoints, and Audio Privacy
 backend/data/temp_audio/*
 !backend/data/temp_audio/.gitkeep
-backend/data/audit/*.db
+backend/data/audit/*.db*
+!backend/data/audit/.gitkeep
 backend/data/models/*.pt
 backend/data/models/*.pth
 !backend/data/models/.gitkeep
