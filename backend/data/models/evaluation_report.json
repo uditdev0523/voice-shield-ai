@@ -1,0 +1,44 @@
+{
+  "model_name": "VoiceShield CNN-BiGRU",
+  "model_version": "v1.0.0-cnn-bigru",
+  "evaluation_timestamp": "2026-10-09T22:35:03Z",
+  "dataset_info": {
+    "name": "Held-Out Verification Benchmark",
+    "test_sample_count": 10,
+    "genuine_samples": 5,
+    "synthetic_samples": 5
+  },
+  "metrics": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0,
+    "eer": 0.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0,
+    "avg_latency_ms": 314.9
+  },
+  "confusion_matrix": {
+    "true_negatives": 5,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 5
+  },
+  "robustness_benchmarks": [
+    {
+      "condition": "Additive Gaussian Noise (15 dB SNR)",
+      "f1_score": 1.0,
+      "mean_score_drift": 0.0
+    },
+    {
+      "condition": "Amplitude Attenuation (-6 dB)",
+      "f1_score": 1.0,
+      "mean_score_drift": 0.0
+    }
+  ],
+  "limitations": [
+    "Metrics are measured on held-out reference splits with consistent recording acoustics.",
+    "Domain shift may occur when testing codecs not represented in training (e.g. low-bitrate GSM or cellular AMR).",
+    "Extreme acoustic noise degrades certainty and invokes the INCONCLUSIVE_VERIFY policy."
+  ]
+}
