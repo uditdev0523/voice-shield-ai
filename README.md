@@ -5,8 +5,11 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.2%2B-EE4C2C.svg)](https://pytorch.org/)
 [![React: 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6.svg)](https://www.typescriptlang.org/)
+[![Public HTTPS Live](https://img.shields.io/badge/Deployment-Live%20HTTPS-success.svg)](https://uditdev0523.github.io/voice-shield-ai/)
 [![Zero Retention](https://img.shields.io/badge/Privacy-Zero%20Audio%20Retention-success.svg)](#24-privacy-architecture-and-retention-behavior)
+
+**Live Demo (Public HTTPS):** [https://uditdev0523.github.io/voice-shield-ai/](https://uditdev0523.github.io/voice-shield-ai/)  
+**GitHub Repository:** [https://github.com/uditdev0523/voice-shield-ai](https://github.com/uditdev0523/voice-shield-ai)
 
 ---
 
