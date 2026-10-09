@@ -96,8 +96,27 @@ class AudioProcessor:
             else:
                 raise AudioProcessingError("Unsupported audio source type.")
         except Exception as e:
-            logger.error(f"Audio decoding failure: {str(e)}")
-            raise AudioProcessingError(f"Malformed or unsupported audio file: {str(e)}")
+            # Defensive fallback to scipy wavfile if soundfile encountered an issue
+            try:
+                import scipy.io.wavfile as wavfile
+                if isinstance(audio_source, (str, Path)):
+                    sample_rate, raw_int = wavfile.read(str(audio_source))
+                elif isinstance(audio_source, bytes):
+                    sample_rate, raw_int = wavfile.read(io.BytesIO(audio_source))
+                elif isinstance(audio_source, io.BytesIO):
+                    audio_source.seek(0)
+                    sample_rate, raw_int = wavfile.read(audio_source)
+                else:
+                    raise e
+                if raw_int.dtype == np.int16:
+                    data = raw_int.astype(np.float32) / 32768.0
+                elif raw_int.dtype == np.int32:
+                    data = raw_int.astype(np.float32) / 2147483648.0
+                else:
+                    data = raw_int.astype(np.float32)
+            except Exception:
+                logger.error(f"Audio decoding failure: {str(e)}")
+                raise AudioProcessingError(f"Malformed or unsupported audio file: {str(e)}")
 
         if data.size == 0:
             raise AudioProcessingError("Audio file contains zero audio samples.")

@@ -19,6 +19,7 @@ import { api } from '../services/api';
 import { DetectionResult } from '../services/types';
 import { Card } from '../components/ui/Card';
 import { RiskBadge } from '../components/ui/StatCard';
+import { convertBlobToCanonicalWav } from '../utils/wavEncoder';
 
 export const LiveDetectionPage: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -101,13 +102,21 @@ export const LiveDetectionPage: React.FC = () => {
         }
       };
 
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        setAudioBlob(blob);
-        setAudioUrl(URL.createObjectURL(blob));
+      mediaRecorder.onstop = async () => {
         setIsRecording(false);
         if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
         setAudioLevel(0);
+        try {
+          const rawBlob = new Blob(audioChunksRef.current);
+          const wavBlob = await convertBlobToCanonicalWav(rawBlob);
+          setAudioBlob(wavBlob);
+          setAudioUrl(URL.createObjectURL(wavBlob));
+        } catch (err: any) {
+          console.warn('WAV conversion fallback:', err);
+          const rawBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          setAudioBlob(rawBlob);
+          setAudioUrl(URL.createObjectURL(rawBlob));
+        }
       };
 
       mediaRecorder.start(250);

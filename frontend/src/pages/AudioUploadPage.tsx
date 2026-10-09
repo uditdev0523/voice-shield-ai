@@ -17,6 +17,7 @@ import { api } from '../services/api';
 import { DetectionResult } from '../services/types';
 import { Card } from '../components/ui/Card';
 import { RiskBadge } from '../components/ui/StatCard';
+import { convertBlobToCanonicalWav } from '../utils/wavEncoder';
 
 export const AudioUploadPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -41,8 +42,8 @@ export const AudioUploadPage: React.FC = () => {
     }
 
     const ext = file.name.split('.').pop()?.toLowerCase();
-    if (!['wav', 'mp3', 'ogg', 'flac'].includes(ext || '')) {
-      setError('Invalid format. Please select a WAV, MP3, OGG, or FLAC file.');
+    if (!['wav', 'mp3', 'ogg', 'flac', 'webm', 'm4a', 'aac'].includes(ext || '')) {
+      setError('Invalid format. Please select a WAV, MP3, OGG, FLAC, M4A, or WEBM audio file.');
       return;
     }
 
@@ -67,7 +68,16 @@ export const AudioUploadPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.analyzeUpload(selectedFile, {
+      let fileToAnalyze = selectedFile;
+      try {
+        const canonicalWavBlob = await convertBlobToCanonicalWav(selectedFile);
+        fileToAnalyze = new File([canonicalWavBlob], selectedFile.name.replace(/\.[^/.]+$/, "") + ".wav", { type: 'audio/wav' });
+      } catch (convErr) {
+        // Fallback to uploading original file
+        fileToAnalyze = selectedFile;
+      }
+
+      const data = await api.analyzeUpload(fileToAnalyze, {
         transaction_amount: transactionAmount,
         recipient_category: recipientCategory,
         is_new_recipient: isNewRecipient,
